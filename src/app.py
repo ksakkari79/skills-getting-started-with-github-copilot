@@ -1,8 +1,8 @@
 """
-High School Management System API
+ School Management System API
 
 A super simple FastAPI application that allows students to view and sign up
-for extracurricular activities at Mergington High School.
+for extracurricular activities at Vinvib School.
 """
 
 from fastapi import FastAPI, HTTPException
@@ -11,7 +11,7 @@ from fastapi.responses import RedirectResponse
 import os
 from pathlib import Path
 
-app = FastAPI(title="Mergington High School API",
+app = FastAPI(title="Vinvib  School API",
               description="API for viewing and signing up for extracurricular activities")
 
 # Mount the static files directory
@@ -25,19 +25,70 @@ activities = {
         "description": "Learn strategies and compete in chess tournaments",
         "schedule": "Fridays, 3:30 PM - 5:00 PM",
         "max_participants": 12,
-        "participants": ["michael@mergington.edu", "daniel@mergington.edu"]
+        "participants": ["michael@Vinvib.edu", "daniel@Vinvib.edu"]
     },
     "Programming Class": {
         "description": "Learn programming fundamentals and build software projects",
         "schedule": "Tuesdays and Thursdays, 3:30 PM - 4:30 PM",
         "max_participants": 20,
-        "participants": ["emma@mergington.edu", "sophia@mergington.edu"]
+        "participants": ["emma@Vinvib.edu", "sophia@Vinvib.edu"]
     },
     "Gym Class": {
         "description": "Physical education and sports activities",
         "schedule": "Mondays, Wednesdays, Fridays, 2:00 PM - 3:00 PM",
         "max_participants": 30,
-        "participants": ["john@mergington.edu", "olivia@mergington.edu"]
+        "participants": ["john@Vinvib.edu", "olivia@Vinvib.edu"]
+    },
+    "Rubik's Cube Class": {
+        "description": "Learn how to solve the Rubik's Cube and improve your speedcubing skills",
+        "schedule": "Wednesdays, 4:00 PM - 5:00 PM",
+        "max_participants": 15,
+        "participants": []
+    },
+    "Sketching Class": {
+        "description": "Explore sketching techniques and develop your artistic skills",
+        "schedule": "Thursdays, 3:00 PM - 4:30 PM",
+        "max_participants": 18,
+        "participants": []
+    },
+    # Sports related activities
+    "Basketball Team": {
+        "description": "Join the school basketball team and participate in inter-school tournaments",
+        "schedule": "Tuesdays and Thursdays, 5:00 PM - 6:30 PM",
+        "max_participants": 15,
+        "participants": []
+    },
+    "Soccer Club": {
+        "description": "Practice soccer skills and play friendly matches",
+        "schedule": "Saturdays, 10:00 AM - 12:00 PM",
+        "max_participants": 22,
+        "participants": []
+    },
+    # Artistic activities
+    "Drama Club": {
+        "description": "Act, direct, and produce plays and performances",
+        "schedule": "Mondays, 4:00 PM - 5:30 PM",
+        "max_participants": 20,
+        "participants": []
+    },
+    "Photography Workshop": {
+        "description": "Learn photography techniques and participate in photo walks",
+        "schedule": "Fridays, 2:00 PM - 3:30 PM",
+        "max_participants": 12,
+        "participants": []
+    },
+    # Intellectual activities
+    "Math Olympiad Training": {
+        "description": "Prepare for math competitions and enhance problem-solving skills",
+        "schedule": "Wednesdays, 3:30 PM - 5:00 PM",
+        "max_participants": 16,
+        "participants": []
+    },
+    "Science Club": {
+        "description": "Conduct experiments and explore scientific concepts",
+        "schedule": "Thursdays, 4:00 PM - 5:30 PM",
+        "max_participants": 18,
+        "participants": []
     }
 }
 
@@ -62,6 +113,12 @@ def signup_for_activity(activity_name: str, email: str):
     # Get the specificy activity
     activity = activities[activity_name]
 
+# Validate student is not already signed up
+    if email in activity["participants"]:
+        raise HTTPException(status_code=400, detail="Already signed up for this activity")
+    # Validate max participants not exceeded
+    if len(activity["participants"]) >= activity["max_participants"]:
+        raise HTTPException(status_code=400, detail="Max participants reached")
     # Add student
     activity["participants"].append(email)
     return {"message": f"Signed up {email} for {activity_name}"}
